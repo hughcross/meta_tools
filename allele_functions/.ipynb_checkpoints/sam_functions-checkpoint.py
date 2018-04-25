@@ -11,7 +11,7 @@ import select
 from Bio.Seq import Seq
 from Bio.Alphabet import IUPAC
 from Bio import SeqIO
-from Bio.SeqRecord import SeqRecord
+import io #from Bio.SeqRecord import SeqRecord
 # the following changed for python 3 (24/04/18)
 from io import io #from StringIO import StringIO
 from Bio import AlignIO
