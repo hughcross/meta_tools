@@ -90,7 +90,7 @@ def pos_finder(return_list, ref_position): # have to add starting position in
     seq_position = seq_position -1
     return seq_position
 
-def pus_finder(return_list, ref_position): # have to add starting position in
+def posi_finder(return_list, ref_position): # have to add starting position in
     cig_num = return_list[0]
     cig_alph = return_list[1]
     for num in range(1,len(cig_num)+1):
