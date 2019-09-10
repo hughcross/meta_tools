@@ -13,7 +13,7 @@ from Bio.Alphabet import IUPAC
 from Bio import SeqIO
 import io #from Bio.SeqRecord import SeqRecord
 # the following changed for python 3 (24/04/18)
-from io import io #from StringIO import StringIO
+#from io import io #from StringIO import StringIO
 from Bio import AlignIO
 from Bio.Align.Applications import MuscleCommandline
 from cigar_funcs import cigar_ref
