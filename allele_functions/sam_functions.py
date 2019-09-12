@@ -16,7 +16,7 @@ import io #from Bio.SeqRecord import SeqRecord
 #from io import io #from StringIO import StringIO
 from Bio import AlignIO
 from Bio.Align.Applications import MuscleCommandline
-from cigar_funcs import cigar_ref
+#from cigar_funcs import cigar_ref
 from collections import OrderedDict
 
 
