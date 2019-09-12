@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # coding: utf-8
-
+## todo: create sequence files from unidentified reads (no haplotype found)
 # # Extract Haplotype sequences from bam file
 import sys
 import os
@@ -53,10 +53,10 @@ outformat = args.format
 
 bamNameNoPath = bamFileName.split('/')[-1]
 sampleName = bamNameNoPath.split('.')[0]
-print(sampleName)
+print('sample name:', sampleName)
 
 logFileName = sampleName+'.log'
-print(logFileName)
+print('log file:', logFileName)
 
 #### make the output dir
 if args.out:
@@ -67,7 +67,6 @@ if args.out:
     logFileName = outfolder+'/'+sampleName+'.log'
 else:
     logFileName = sampleName+'.log'
-print(logFileName)
 
 # ## Get dict of haplotypes and list of positions from files
 hapFile = open(hapFileName, 'r')
@@ -95,7 +94,6 @@ positions = tuple(posList)
 #print(posList)
 print('SNP positions in alignment', positions)
 
-print('Ignore the warning:')
 # ## Use pysam to parse the file
 
 bamfileE = pysam.AlignmentFile(bamFileName, "rb")
@@ -111,7 +109,7 @@ for c in hap1:
     cigRef = cigar_ref(cig)
     # make seqdict with quality
     seq = c.query_sequence
-    qual = c.query_qualities
+    qual = c.qual
     seqD.setdefault(qy, {})['seq']=seq
     seqD.setdefault(qy, {})['qual']=qual
     # get haplotype for each
@@ -145,13 +143,14 @@ print('\nNumber of unidentified reads:', len(notFound))
 if outformat == 'fastq':
     for hap in hList:
         if args.out:
-            newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fasta'
+            newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fastq'
         else:
-            newFileName = sampleName+'_haplotype'+hap+'.fasta'
+            newFileName = sampleName+'_haplotype'+hap+'.fastq'
+        print('writing:', newFileName)
         output = open(newFileName, 'w')
         readlist = hapLists[hap]
         for read in readlist:
-            output.write('@'+read+'\n'+seqD[read]['seq']+'\n+\n'+seqD[read]['qual']+'\n')
+            output.write('@'+read+'\n'+seqD[read]['seq']+'\n+\n'+str(seqD[read]['qual'])+'\n')
         output.close()
 else: # makes fasta default
     for hap in hList:
@@ -175,5 +174,6 @@ logout.write('Haplotype\tNumber of reads\n')
 for h in hList:
     numReads = str(len(hapLists[h]))
     logout.write(h+'\t'+numReads+'\n')
+logout.write('None\t'+str(len(notFound))+'\n')
 logout.close()
 
