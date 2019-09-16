@@ -182,8 +182,13 @@ logout = open(logFileName,'w')
 logout.write('Haplotype\tNumber of reads\n')
 
 for h in hList:
-    numReads = str(len(hapLists[h]))
+    # account for no reads
+    if h in hapLists:
+        numReads = str(len(hapLists[h]))
+    else:
+        numReads = '0'
     logout.write(h+'\t'+numReads+'\n')
+
 logout.write('None\t'+str(len(notFound))+'\n')
 logout.close()
 
