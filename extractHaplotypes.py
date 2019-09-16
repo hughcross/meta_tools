@@ -142,28 +142,38 @@ print('\nNumber of unidentified reads:', len(notFound))
 # for fastq file
 if outformat == 'fastq':
     for hap in hList:
-        if args.out:
-            newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fastq'
+        ## have to account for haps with no reads
+        if hap in hapLists:
+
+            if args.out:
+                newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fastq'
+            else:
+                newFileName = sampleName+'_haplotype'+hap+'.fastq'
+            print('writing:', newFileName)
+            output = open(newFileName, 'w')
+            readlist = hapLists[hap]
+            for read in readlist:
+                output.write('@'+read+'\n'+seqD[read]['seq']+'\n+\n'+str(seqD[read]['qual'])+'\n')
+            output.close()
         else:
-            newFileName = sampleName+'_haplotype'+hap+'.fastq'
-        print('writing:', newFileName)
-        output = open(newFileName, 'w')
-        readlist = hapLists[hap]
-        for read in readlist:
-            output.write('@'+read+'\n'+seqD[read]['seq']+'\n+\n'+str(seqD[read]['qual'])+'\n')
-        output.close()
+            print('no reads found for haplotype',hap)
 else: # makes fasta default
     for hap in hList:
-        if args.out:
-            newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fasta'
+        # have to account for haps with no reads
+        if hap in hapLists:
+
+            if args.out:
+                newFileName = outfolder+'/'+sampleName+'_haplotype'+hap+'.fasta'
+            else:
+                newFileName = sampleName+'_haplotype'+hap+'.fasta'
+            print('writing:', newFileName)
+            output = open(newFileName, 'w')
+            readlist = hapLists[hap]
+            for read in readlist:
+                output.write('>'+read+'\n'+seqD[read]['seq']+'\n')
+            output.close()
         else:
-            newFileName = sampleName+'_haplotype'+hap+'.fasta'
-        print('writing:', newFileName)
-        output = open(newFileName, 'w')
-        readlist = hapLists[hap]
-        for read in readlist:
-            output.write('>'+read+'\n'+seqD[read]['seq']+'\n')
-        output.close()
+            print('no reads found for haplotype', hap)
 
 # ## Output logfile
 print('writing logfile', logFileName)
