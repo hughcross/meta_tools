@@ -175,6 +175,26 @@ else: # makes fasta default
         else:
             print('no reads found for haplotype', hap)
 
+# output unidentified reads
+if outformat == 'fastq':
+    if args.out:
+        unidFileName = outfolder+'/'+sampleName+'_unidentified.fastq'
+    else:
+       unidFileName = sampleName+'_unidentified.fastq'
+    unid_out = open(unidFileName, 'w')
+    for read in notFound:
+        unid_out.write('@'+read+'\n'+seqD[read]['seq']+'\n+\n'+str(seqD[read]['qual'])+'\n')
+    unid_out.close()
+else:
+    if args.out:
+        unidFileName = outfolder+'/'+sampleName+'_unidentified.fasta'
+    else:
+        unidFileName = sampleName+'_unidentified.fasta'
+    unid_out = open(unidFileName, 'w')
+    for read in notFound:
+        unid_out.write('>'+read+'\n'+seqD[read]['seq']+'\n')
+    unid_out.close()
+
 # ## Output logfile
 print('writing logfile', logFileName)
 logout = open(logFileName,'w')
