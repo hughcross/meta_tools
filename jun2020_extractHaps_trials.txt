@@ -1,0 +1,73 @@
+
+# first merge reads using bbmerge
+## a single pair
+bbmerge.sh \
+ in1=Sample-10_2_1.pair1.truncated \
+ in2=Sample-10_2_1.pair2.truncated \
+ out=Sample-10_2_1.merged.fastq
+
+## loop through all pairs
+
+cat samplelist | while read samp;
+do
+bbmerge.sh \
+ in1=${samp}.pair1.truncated \
+ in2=${samp}.pair2.truncated \
+ out=${samp}.merged.fastq
+done
+
+reference:
+/Users/hughcross/OneDrive/AnatAnalysis/Paua/reference_haplotypes/
+bwa index synthHaplotype1.fasta
+
+DATADIR='/Users/hughcross/OneDrive/AnatAnalysis/Paua/june20_extractHaps/data'
+REFDIR='/Users/hughcross/OneDrive/AnatAnalysis/Paua/reference_haplotypes/'
+
+bwa mem -t 4 ../ref/CCB11_Haplotype1.fasta Bucket1.fastq > buck1.sam
+bwa mem -t 4 ${REFDIR}/synthHaplotype1.fasta ${DATADIR}/Sample-10_2_1.merged.fastq > Sample-10_2_1.sam
+bwa mem -t 4 ${REFDIR}/synthHaplotype1.fasta ${DATADIR}/Sample-10_4_4.merged.fastq > Sample-10_4_4.merged.sam
+
+## convert to bam, sort, and index
+samtools view -b -@ 4 Sample-10_2_1.sam -o Sample-10_2_1.bam
+
+samtools sort Sample-10_2_1.bam -o sort_Sample-10_2_1.bam
+samtools index sort_Sample-10_2_1.bam
+##
+samtools view -b -@ 4 Sample-10_4_4.merged.sam | samtools sort -@ 4 - -o Sample-10_4_4.bam
+samtools index Sample-10_4_4.bam
+
+/Users/hughcross/Analysis/repos/meta_tools/extractHaplotypes.py \
+  -b Sample-10_4_4.bam \
+  -p ../june2020_positions.txt \
+  -H ../paua_bucket_haps.txt \
+  -r Haplotype1 \
+  -o samp4_haps
+
+#### try to trim seq edges
+seqtk trimfq -b 22 -e 20 Sample-10_4_4.merged.fastq > Sample-10_4_4.merged.trimd.fastq
+bwa mem -t 4 ${REFDIR}/synthHaplotype1.fasta ${DATADIR}/Sample-10_4_4.merged.trimd.fastq > Sample-10_4_4trmd.sam
+samtools view -b -@ 4 Sample-10_4_4trmd.sam | samtools sort -@ 4 - -o Sample-10_4_4trmd.bam
+samtools index Sample-10_4_4trmd.bam
+
+/Users/hughcross/Analysis/repos/meta_tools/extractHaplotypes.py \
+  -b Sample-10_4_4trmd.bam \
+  -p ../june2020_positions.txt \
+  -H ../paua_bucket_haps.txt \
+  -r Haplotype1 \
+  -o samp4t_haps
+
+# exito!
+# try to derep and size out
+vsearch --derep_fulllength Sample-10_4_4trmd_haplotype1.fasta --minuniquesize 10 --relabel rep. --sizeout --output rl_dr10_Sample-10_4_4trmd_haplotype1.fasta
+
+vsearch --derep_fulllength Sample-10_4_4trmd_haplotype4.fasta --minuniquesize 10 --relabel rep. --sizeout --output rl_dr10_Sample-10_4_4trmd_haplotype4.fasta
+
+#########
+# try with fastq output
+extractHaplotypes.py \
+  -b sort_buck1.bam \
+  -p example_position_list.txt \
+  -H example_haplotypes.txt \
+  -r CCB11_Haplotype1 \
+  -o fq_buck1a_haps \
+  -f fastq

@@ -199,7 +199,7 @@ else:
 print('writing logfile', logFileName)
 logout = open(logFileName,'w')
 
-logout.write('Haplotype\tNumber of reads\n')
+logout.write('Haplotype\t'+sampleName+'\n')
 
 for h in hList:
     # account for no reads

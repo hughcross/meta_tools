@@ -1,0 +1,42 @@
+
+
+# loop through all test samples 
+
+## trim off ends in data folder
+
+cat samplelist | while read samp;
+do
+seqtk trimfq -b 22 -e 20 ${samp}.merged.fastq > ${samp}.trimd.fastq
+done
+
+## map and run extractHaps (in maps folder)
+DATADIR='/Users/hughcross/OneDrive/AnatAnalysis/Paua/june20_extractHaps/data'
+REFDIR='/Users/hughcross/OneDrive/AnatAnalysis/Paua/reference_haplotypes/'
+
+cat samplelist | while read samp;
+do
+bwa mem -t 4 ${REFDIR}/synthHaplotype1.fasta ${DATADIR}/${samp}.trimd.fastq > ${samp}.sam
+samtools view -b -@ 4 ${samp}.sam | samtools sort -@ 4 - -o ${samp}.bam
+samtools index ${samp}.bam
+done
+
+## now loop through the python script
+
+cat samplelist | while read samp;
+do
+/Users/hughcross/Analysis/repos/meta_tools/extractHaplotypes.py \
+  -b ${samp}.bam \
+  -p ../june2020_positions.txt \
+  -H ../paua_bucket_haps.txt \
+  -r Haplotype1 \
+  -o haplotypes_${samp}
+done
+
+## combine all log files into one folder 
+
+cat samplelist | while read samp;
+do
+cp haplotypes_${samp}/${samp}.log logfiles
+done
+
+### R code to merge all tables
