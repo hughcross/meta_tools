@@ -89,7 +89,17 @@ cp haplotypes_${samp}/${samp}.log logfiles
 done
 ```
 
-(Note: above assumes that each sample folder is named as in the previous script, e.g. haplotypes_sample1)
+(Note: above assumes that each sample folder is named as in the previous script, e.g. haplotypes_sample1).
+
+Once you have moved all the logfiles into one folder, you can use the R script [**merge_tables.R**](../scripts/merge_tables.R) to merge all the tables together. You will need to have the tidyverse library installed on your R, but that is it. The command will go like this:
+
+```
+Rscript /path/to/github/repo/meta_tools/scripts/merge_tables.R LOGFILE_FOLDER_PATH OUTPUT_TABLE_NAME 
+```
+
+The second argument is optional. 
+
+
 
 ## Checking for noise in the haplotype output
 

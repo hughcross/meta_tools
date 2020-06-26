@@ -2,6 +2,8 @@
 
 setwd("/Users/hughcross/OneDrive/AnatAnalysis/Paua/june20_extractHaps/maps/logfiles/")
 
+library(dplyr)
+library(tidyverse)
 ## read in list of samples
 samplelist <- scan('/Users/hughcross/OneDrive/AnatAnalysis/Paua/june20_extractHaps/maps/samplelist', what="", sep="\n")
 
