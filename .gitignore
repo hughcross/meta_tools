@@ -2,3 +2,4 @@
 __pycache__/__init__.cpython-36.pyc __pycache__/cigar_funcs.cpython-36.pyc __pycache__/sam_functions.cpython-36.pyc
 *.pyc
 .ipynb_checkpoints/README-checkpoint.md
+.ipynb_checkpoints
