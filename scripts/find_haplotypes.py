@@ -167,6 +167,18 @@ def output_files(prefix, major_haplotypes, informative_alleles):
     posout.close()
     hapout.close()
 
+## added to remove gaps in reference
+def remove_ref_gaps(positions, alignment):
+    """remove gaps from reference to adjust informative positions"""
+    ref = str(alignment[0,:].seq)
+    adjA = []
+    for pos in positions:
+        sub = ref[:pos]
+        nogap = sub.replace('-','')
+        #print(pos, len(sub), 'revised:',len(nogap)+1)
+        adjust = len(nogap)
+        adjA.append(adjust)
+    return adjA
 
 ## Main function
 def main():
@@ -184,8 +196,9 @@ def main():
     aln2_infB = informative_bases(aln2_infA, aln2_pos_counts)
     aln2_rh = raw_haplotypes(aln2_info[0], aln2_info[1], aln2_infA, aln2_infB)
     aln2_mh = major_haplotypes(aln2_rh)
+    aln2_adj = remove_ref_gaps(aln2_infA, aln2)
 
-    output_files(prefix, aln2_mh, aln2_infA)
+    output_files(prefix, aln2_mh, aln2_adj)
 
 if __name__ == "__main__":
     main()
