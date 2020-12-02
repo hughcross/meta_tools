@@ -34,7 +34,7 @@ help='output format, either fastq or fasta (default)')
 
 parser.add_argument('-o', '--output_folder', dest='out',
 type=str,
-help='output folder name (default: name of sample')
+help='output folder name (default: name of sample)')
 
 ### argparse parameters
 args = parser.parse_args()
