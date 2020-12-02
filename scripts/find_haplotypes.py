@@ -66,9 +66,9 @@ def global_adjust(alignment):
         if alignment[0,-e] == '-':
             continue
         else:
-            endpoint = e-1
+            endpoint = alnLength - (e-1)
             break
-    new_alignment = alignment[:,startpoint:-endpoint]
+    new_alignment = alignment[:,startpoint:endpoint]
     return new_alignment
 
 def sample_info(alignment):
