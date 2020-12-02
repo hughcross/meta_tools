@@ -56,7 +56,7 @@ Now align the sequences. This can take a few minutes, depending on the number of
 ```
 module load MAFFT/7.429-gimkl-2020a
 
-mafft --auto dr100_allSamples_wRef.fasta > aln_dr100_allSamples_wRefa.fasta
+mafft --auto dr100_allSamples_wRef.fasta > aln_dr100_allSamples_wRef.fasta
 ```
 
 ## Run Python script to find haplotypes
