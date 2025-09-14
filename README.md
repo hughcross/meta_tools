@@ -12,7 +12,7 @@ Because the assemblies are derived from environmental DNA, it is not possible to
 
 The following alignment from part of the **cytB** mitochondrial gene illustrates the approach:
 
-![fur seal alignment](images/furseal_haplo_finder_slide1.png)
+![fur seal alignment](images/furseal_haplo_finder_slide1.pdf)
 
 
 
